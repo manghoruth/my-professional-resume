@@ -1,0 +1,25 @@
+name: My First Pieline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Clone the code
+      run: docker build -t manghoruth/portfolio-app .
+
+    - name: Docker login
+      uses: docker/login-action@v3
+      with:
+        username: manghoruth
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: push image to Docker Hub
+      run: docker push manghoruth/portfolio-app
