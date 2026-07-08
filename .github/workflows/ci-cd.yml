@@ -1,0 +1,50 @@
+name: Build and Push to ECR
+
+on:
+  push:
+   # pull_request:
+   #  branches:  ['main', 'dev']
+   
+   branches: ['main',]
+
+jobs:
+    build_scan:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.9'
+
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                pip install bandit
+
+            - name: Run trivy scan
+              uses: aquasecurity/trivy-action@v0.36.0
+              with:
+                scan-type: 'fs'
+                severity: 'HIGH' 'CRITICAL'
+                exit-code: '1'
+
+            - name: Build Docker image
+              run: docker build -t 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest .
+              
+            - name: Scan docker image
+              uses: aquasecurity/trivy-action@v0.36.0
+              with:
+                scan-type: 'image'
+                image-ref: 03846276 9284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest
+                format: 'table'
+                ignore-unfixed: true
+                severity: 'HIGH,CRITICAL'
+                exit-code: '1'
+
+            - name: push docker image to ECR
+              run: echo "Pushing docker image to ECR"
+
+                
