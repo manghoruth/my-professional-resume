@@ -53,3 +53,13 @@ jobs:
                 role-to-assume: arn:aws:iam::038462769284:role/github-action-role
                 role-session-name: GitHubActions
                 aws-region: us-east-1
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - name: Push Docker image to Amazon ECR
+              run: |
+                docker tag 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest
+                docker push 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest   
+                
