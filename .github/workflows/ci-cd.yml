@@ -38,7 +38,7 @@ jobs:
               uses: aquasecurity/trivy-action@v0.36.0
               with:
                 scan-type: 'image'
-                image-ref: 03846276 9284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest
+                image-ref: 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest
                 format: 'table'
                 ignore-unfixed: true
                 severity: 'HIGH,CRITICAL'
