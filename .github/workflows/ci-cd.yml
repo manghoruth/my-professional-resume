@@ -35,13 +35,13 @@ jobs:
                 exit-code: '1'
 
             - name: Build Docker image
-              run: docker build -t 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest .
+              run: docker build -t ${{ secrets.ECR_REPO }}.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest .
               
             - name: Scan docker image
               uses: aquasecurity/trivy-action@v0.36.0
               with:
                 scan-type: 'image'
-                image-ref: 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest
+                image-ref: ${{ secrets.ECR_REPO }}/demo_repo:latest
                 format: 'table'
                 ignore-unfixed: true
                 severity: 'HIGH,CRITICAL'
@@ -50,7 +50,7 @@ jobs:
             - name: configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
-                role-to-assume: arn:aws:iam::038462769284:role/github-action-role
+                role-to-assume: ${{ secrets.AWS_ROLE }}/github-action-role
                 role-session-name: GitHubActions
                 aws-region: us-east-1
 
@@ -60,6 +60,5 @@ jobs:
 
             - name: Push Docker image to Amazon ECR
               run: |
-                docker tag 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest
-                docker push 038462769284.dkr.ecr.us-east-1.amazonaws.com/demo_repo:latest   
-                
+                docker tag ${{ secrets.ECR_REPO }}/demo_repo:latest ${{ secrets.ECR_REPO }}/demo_repo:latest
+                docker push ${{ secrets.ECR_REPO }}/demo_repo:latest   
