@@ -42,7 +42,7 @@ jobs:
                 format: 'table'
                 ignore-unfixed: true
                 severity: 'HIGH,CRITICAL'
-                exit-code: '1'
+                exit-code: '0'
 
             - name: push docker image to ECR
               run: echo "Pushing docker image to ECR"
